@@ -1,0 +1,275 @@
+<app-navbar></app-navbar>
+<!-- Page Content -->
+<div id="page-content">
+   
+
+    <div class="container my-5">
+        <div class="row">
+            <!-- Property Detail Content -->
+            <div class="col-md-9 col-sm-9">
+                <section id="property-detail">
+                    <header class="property-title">
+                        <h1>{{property.title}}</h1>                        
+                    </header>
+                    <div id="carouselExampleFade" class="carousel slide carousel-fade mb-4" *ngIf="property">
+                        <div class="carousel-inner">
+                          <div class="carousel-item" *ngFor="let image of property.image; let i = index" [class.active]="i === 0">
+                            <img src="http://localhost:8000/images/{{image}}" class="d-block w-100" style="height: 514px">
+                          </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="visually-hidden">Next</span>
+                        </button>
+                      </div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12">
+                            <section id="quick-summary" class="clearfix">
+                                <header><h2>Quick Summary</h2></header>
+                                <dl>
+                                    <dt>Location</dt>
+                                        <dd>{{property.city}}, {{property.street}}</dd>
+                                    <dt>For</dt>
+                                    @if(property.status === 'for_sale'){
+                                        <dd>Sale</dd>
+                                    }@else if(property.status === 'for_rent'){
+                                        <dd>Rent</dd>
+                                        <dt>Period</dt>
+                                        <dd>{{property.rental_period}}</dd>
+                                    }  
+                                    <dt>Price</dt>
+                                        <dd><span class="tag price">LE {{property.price}}</span></dd>
+                                    <dt>Type</dt>
+                                        <dd>{{property.type}}</dd>                                      
+                                    <dt>Area</dt>
+                                        <dd>{{property.area}} m<sup>2</sup></dd>
+                                    <dt>Beds</dt>
+                                        <dd>{{property.beds}}</dd>
+                                    <dt>Baths</dt>
+                                        <dd>{{property.baths}}</dd>
+                                    <dt>Rating</dt>
+                                        <dd><div class="pt-1">
+                                            <div class="d-flex align-items-center justify-content-end">
+                                                <div>({{rating.rowCount}})</div>
+                                                <div class="rating rating-overall" style="margin-bottom: -8px;margin-left: 8px;" [innerHTML]="finalRatingForProperty | rating"></div>
+                                            </div>
+                                        </div></dd>
+                                </dl>
+                            </section><!-- /#quick-summary -->
+                        </div><!-- /.col-md-4 -->
+                        <div class="col-md-8 col-sm-12">
+                            <section id="description">
+                                <header><h2>Property Description</h2></header>
+                                <p>
+                                    {{property.description}}
+                                </p>
+                            </section><!-- /#description -->
+                            
+                           
+                            <!-- <section id="property-map">
+                                <header><h2>Map</h2></header>
+                                <div class="property-detail-map-wrapper">
+                                    <div class="property-detail-map" id="property-detail-map"></div>
+                                </div>
+                            </section> -->
+                            <!-- /#property-map -->
+                            <section id="property-rating">
+                                <header><h2>Rating</h2></header>
+                                <div class="clearfix text-center">
+                                    <!-- <aside>
+                                        <header>Your Rating</header>
+                                        <div class="rating rating-user">
+                                            <div class="inner">
+                                                <p-rating [(ngModel)]="userValue" [cancel]="false"></p-rating>
+                                            </div>
+                                        </div>
+                                    </aside> -->
+                                    <figure class="float-none">
+                                        <header>Overall Rating</header>
+                                        <div>
+                                            <div>({{rating.rowCount}})</div>
+                                            <div class="rating rating-overall" [innerHTML]="finalRatingForProperty | rating"></div>
+                                        </div>
+                                    </figure>
+                                </div>
+                                
+                            </section><!-- /#property-rating -->
+                            
+                        </div><!-- /.col-md-8 -->
+                        <div class="col-md-12 col-sm-12">
+                            
+                            <!-- <hr class="thick">
+                            <section id="similar-properties">
+                                <header><h2 class="no-border">Similar Properties</h2></header>
+                                <div class="row">
+                                    @for (property of similarProperties; track property.id) {
+                                        <div class="col-md-4 col-sm-6">
+                                            <app-property-card></app-property-card>
+                                        </div>
+                                    }
+                                </div>
+                            </section> -->
+                            <hr class="thick">
+                            <section id="comments">
+                                <header><h2 class="no-border">Comments</h2></header>
+                                <ul class="comments">
+                                    @for (review of reviewData; track review) {
+                                        <li class="comment w-100">
+                                            <figure>
+                                                <div class="image">
+                                                    <img alt="" src="assets/img/user.png">
+                                                </div>
+                                            </figure>
+                                            <div class="comment-wrapper">
+                                                <div class="name">{{review.user_name}}</div>
+                                                <span class="date"><span class="fa fa-calendar"></span>{{review.updated_at | date }}</span>
+                                                <div class="rating rating-individual" data-score="5"></div>
+                                                <p>{{review.comment}}</p>
+                                                <a *ngIf="review.user_email === userLoggedData.email" class="reply" style="cursor: pointer;" (click)="confirmDelete($event,review.id, 'delete')"><span class="fa fa-reply text-danger"></span>Delete</a>
+                                                <a *ngIf="review.user_email === userLoggedData.email" class="reply ms-3" style="cursor: pointer;" (click)="confirmDelete($event,review.id, 'update')"><span class="fa fa-reply text-danger"></span>Edit</a>
+                                                <hr>
+                                            </div>
+                                        </li>
+                                    }
+
+                                    <p-toast></p-toast>
+                                    <p-confirmDialog>
+                                        <ng-template pTemplate="message">
+                                            <div *ngIf="action === 'delete'">
+                                                Are you sure you want to delete this comment?
+                                            </div>
+                                            <div *ngIf="action === 'update'">
+                                                <textarea [(ngModel)]="updatedComment" rows="5" cols="40"></textarea>
+                                            </div>
+                                        </ng-template>
+                                    </p-confirmDialog>
+                                </ul>
+                            </section>
+                            <hr class="thick">
+                            <section id="comments">
+                                <header>
+                                    <h2 class="no-border">Reviews</h2>
+                                </header>
+                                <form role="form" id="form-create-account" method="post" [formGroup]="registerForm">
+                                    <div id="agency">
+                                        <div class="form-group">
+                                            <label for="account-agency" class="text-secondary my-2" style="opacity: 0.6"
+                                                formControlName="dropdownValue">Select your rating</label>
+                                            <br />
+                                            <select formControlName="rate" class="custom-dropdown" name="account-agency" id="account-agency" class="text-secondary">
+                                                <option value="">Select rate</option>
+                                                <option value="1">Not very good</option>
+                                                <option value="2">Not good</option>
+                                                <option value="3">acceptable</option>
+                                                <option value="4">good</option>
+                                                <option value="5">very good</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                
+                                    <hr />
+                                    <div class="form-group mb-3" [formGroup]="registerForm">
+                                        <label for="form-create-account-full-name" style="font-weight: bold; color: rgb(92, 91, 91)">Comment</label>
+                                        <textarea type="text" class="form-control" id="form-create-account-full-name" required
+                                            style="background-color: rgb(242, 241, 241); border-radius: 0; height: 200px; resize: none;" class="form-control" id="fullname"
+                                            formControlName="comment" ></textarea>
+                                        @if(registerForm.controls['comment'].invalid &&
+                                        registerForm.controls['comment'].touched ){
+                                        @if(registerForm.controls['comment'].errors?.['minlength']) {
+                                        <span class="form-text text-danger"> Min length is 3 </span>
+                                        }}
+                                    </div>
+                                    <div class="checkbox">
+                                        <button (click)="handlesubmit()" disabled [disabled]="commentForm.invalid&&rateForm.invalid" type="submit"
+                                            class="btn pull-right btn-default btn-primary" id="bttn">
+                                            Add Review
+                                        </button>
+                                    </div>
+                                </form>
+                            </section>
+                        </div><!-- /.col-md-12 -->
+                    </div><!-- /.row -->
+                </section><!-- /#property-detail -->
+            </div><!-- /.col-md-9 -->
+            <!-- end Property Detail Content -->
+
+            <!-- sidebar -->
+            <div class="col-md-3 col-sm-3">
+                <section id="sidebar">
+                    @if (!isLoggedIn) {
+                        <aside id="edit-search">
+                            <h2 class="text-center" style="margin-top: 20px;">Make an Offer</h2>
+                            <div class="text-center"><a routerLink="/signin" class="nav-link">Sign in to make an offer</a></div>
+                        </aside>
+                    }@else if (isLoggedIn && userRole === "user") {
+                        <form>
+                            <aside id="edit-search">
+                                <h2 class="text-center" style="margin-top: 20px;">Make an Offer</h2>
+                            </aside>
+                            @if (offerSubmittedBefore) {
+                                <div class="alert alert-info">Your offer has been submitted for this property. You'll be notified via email once the listing owner responds to your offer.</div>
+                            }@else {
+                                <div>
+                                    <button class="btn btn-default" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Make Offer now</button>
+                                </div>
+                                <div class="collapse" id="collapseExample">
+                                    <div class="card card-body">
+                                        <form [formGroup]="offerForm" (ngSubmit)="submitOffer()">
+                                            <div class="mb-3">
+                                              <label for="offeredPrice" class="form-label">Offered Price</label>
+                                              <input type="number" class="form-control" id="offeredPrice" formControlName="offeredPrice">
+                                              <div *ngIf="offerForm.controls['offeredPrice'].invalid && offerForm.controls['offeredPrice'].dirty || offerForm.controls['offeredPrice'].touched" class="text-danger small">
+                                                <div *ngIf="offerForm.controls['offeredPrice'].errors?.['required']">Offered price is required.</div>
+                                                <div *ngIf="offerForm.controls['offeredPrice'].errors?.['min']">Offered price must be greater than 0.</div>
+                                              </div>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                              <label for="message" class="form-label">Message</label>
+                                              <textarea class="form-control" id="message" formControlName="message" rows="4"></textarea>
+                                              <div *ngIf="offerForm.controls['message'].invalid &&  offerForm.controls['message'].touched" class="text-danger small">
+                                                Message is required.
+                                              </div>
+                                            </div>
+                                          
+                                            <button type="submit" class="btn btn-default" [disabled]="offerForm.invalid">Submit Offer</button>
+                                        </form>                                      
+                                    </div>
+                                </div>
+                            }
+                        </form>   
+                    }
+                    <aside id="edit-search">
+                        <app-search ></app-search>
+                    </aside>
+                    @if (similarProperties.length > 0) {
+                        <aside id="featured-properties">
+                            <header><h3>Similar Properties</h3></header>
+                            @for (property of similarProperties; track property.id) {
+                                <div class="property small">
+                                    <a [routerLink]="['/property-details', property.id]">
+                                        <div class="property-image">
+                                            <img alt="Similar Property Image" src="http://localhost:8000/images/{{property.images[0].url}}">
+                                        </div>
+                                    </a>
+                                    <div class="info">
+                                        <a [routerLink]="['/property-details', property.id]"><h4>{{ property.title }}</h4></a>
+                                        <figure>{{ property.city }}, {{ property.district }} </figure>
+                                        <div class="tag price">LE {{ property.price }}</div>
+                                    </div>
+                                </div><!-- /.property --> 
+                            }   
+                        </aside><!-- /#featured-properties -->
+                    }
+                </section><!-- /#sidebar -->
+            </div><!-- /.col-md-3 -->
+            <!-- end Sidebar -->
+        </div><!-- /.row -->
+    </div><!-- /.container -->
+</div>
+<!-- end Page Content -->
+<app-big-footer></app-big-footer>

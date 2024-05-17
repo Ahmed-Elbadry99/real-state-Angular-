@@ -1,0 +1,29 @@
+<div class="property">
+    <a [routerLink]="['/property-details', property.id]">
+        <div class="property-image">
+            <img alt="" src="http://localhost:8000/images/{{property.image}}">
+        </div>
+        <div class="overlay">
+            <div class="info">
+                <div class="price-tag">LE {{property.price}}</div>
+                <h3>{{property.title}}</h3>
+                <figure>{{property.street}}, {{property.city}}</figure>
+                <figure>{{property.type}}</figure>
+            </div>
+            <ul class="additional-info">
+                <li>
+                    <header>Area:</header>
+                    <figure>{{property.area}}m<sup>2</sup></figure>
+                </li>
+                <li>
+                    <header>Beds:</header>
+                    <figure>{{property.beds}}</figure>
+                </li>
+                <li>
+                    <header>Baths:</header>
+                    <figure>{{property.baths}}</figure>
+                </li>
+            </ul>
+        </div>
+    </a>
+</div>

@@ -1,0 +1,121 @@
+<app-navbar></app-navbar>
+<div class="sign pb-3">
+  <nav class="container py-2">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/" class="nav-link text-dark link-secondary">Home</a></li>
+        <li class="breadcrumb-item text-secondary">Register</li>
+      </ol>
+  </nav>
+  <div class="container my-3">
+      <header class="border-bottom text-secondary my-4 pb-1"><h2>Create an Account</h2></header>
+      <div class="row">
+        <div *ngIf="showSuccessMessage" class="success-message">
+          User registered successfully.
+        </div>
+        
+        <div *ngIf="registerForm.errors?.['apiError']" class="error-message">
+          {{ registerForm.errors?.['apiError'] }}
+        </div>
+      
+        
+          <div class="col-md-4 col-sm-6 m-auto">
+              <form [formGroup]="registerForm" (submit)="handlesubmit()">
+                <h5 style="margin-bottom: 20px">Account Type</h5>
+                <div class="radio">
+                  <label>
+                    <input
+                      type="radio"
+                      style="margin-right: 6px; cursor: pointer"
+                      value="user"
+                      formControlName="role"
+                    />Regular User
+                  </label>
+                </div>
+                <div class="radio" >
+                  <label>
+                    <input
+                      type="radio"
+                      value="agent"
+                      style="margin-right: 6px; cursor: pointer"
+                      formControlName="role"
+                    />Agent
+                  </label>
+                </div>
+                <div *ngIf="registerForm.get('role')?.errors?.['apiError']" class="error text-danger">
+                  {{ registerForm.get('role')?.errors?.['apiError'] }}
+                </div>
+                <hr>
+                  <div class="form-group mb-2">
+                    <label for="name" class="fw-bold text-secondary">Full Name:</label>
+                    <input type="text" class="form-control bg-secondary bg-opacity-25 rounded-0 py-2" id="name" formControlName="name">
+                    @if(registerForm.controls["name"].touched && registerForm.controls["name"].invalid){
+                        @if(registerForm.controls["name"].errors?.["required"]){
+                            <div class="error text-danger">Name is required.</div>
+                        }
+                        @if(registerForm.controls["name"].errors?.["minlength"]){
+                            <div class="error text-danger">Min length for name is 3 characters.</div>
+                        }
+                    }
+                    <div *ngIf="registerForm.get('name')?.errors?.['apiError']" class="error text-danger">
+                      {{ registerForm.get('name')?.errors?.['apiError'] }}
+                    </div>
+                  </div>
+                  <div class="form-group mb-2">
+                      <label for="email" class="fw-bold text-secondary">Email:</label>
+                      <input type="email" class="form-control bg-secondary bg-opacity-25 rounded-0 py-2" id="email" formControlName="email">
+                      @if(registerForm.controls["email"].touched && registerForm.controls["email"].invalid){
+                          @if(registerForm.controls["email"].errors?.["required"]){
+                              <div class="error text-danger">Email is required.</div>
+                          }
+                          @if(registerForm.controls["email"].errors?.["pattern"]){
+                              <div class="error text-danger">Please enter a valid email.</div>
+                          }
+                      }
+                      <div *ngIf="registerForm.get('email')?.errors?.['apiError']" class="error text-danger">
+                        {{ registerForm.get('email')?.errors?.['apiError'] }}
+                      </div>
+                  </div>
+                  <div class="form-group mb-3">
+                      <label for="password" class="fw-bold text-secondary">Password:</label>
+                      <input type="password" class="form-control bg-secondary bg-opacity-25 rounded-0 py-2" id="password" formControlName="password">
+                      @if(registerForm.controls["password"].touched && registerForm.controls["password"].invalid){
+                          @if(registerForm.controls["password"].errors?.["required"]){
+                              <div class="error text-danger">Password is required.</div>
+                          }
+                          @if(registerForm.controls["password"].errors?.["minlength"]){
+                              <div class="error text-danger">The password must not be less than 8 characters</div>
+                          }
+                      }
+                      <div *ngIf="registerForm.get('password')?.errors?.['apiError']" class="error text-danger">
+                        {{ registerForm.get('password')?.errors?.['apiError'] }}
+                      </div>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="confirmpassword" class="fw-bold text-secondary">Confirm Password:</label>
+                    <input type="password" class="form-control bg-secondary bg-opacity-25 rounded-0 py-2" id="confirmpassword" formControlName="password_confirmation">
+                    @if(registerForm.controls["password_confirmation"].touched && registerForm.controls["password_confirmation"].invalid){
+                        @if(registerForm.controls["password_confirmation"].errors?.["required"]){
+                            <div class="error text-danger">Please confirm the password.</div>
+                        }
+                        @if(registerForm.controls["password_confirmation"].errors?.["passwordMismatch"]){
+                            <div class="error text-danger">Passwords do not match.</div>
+                        }
+                    }
+                    <div *ngIf="registerForm.get('password_confirmation')?.errors?.['apiError']" class="error text-danger">
+                      {{ registerForm.get('password_confirmation')?.errors?.['apiError'] }}
+                    </div>
+                </div>
+                  <div class="form-group clearfix">
+                      <button type="submit" class="btn btn-primary rounded-0 d-block py-2 mb-2" [disabled]="registerForm.invalid">Create an Account</button>
+                  </div>
+              </form>
+              <hr>
+                <div class="text-center"><a routerLink="/signin" class="nav-link">Sign in to my Account</a></div>
+          </div>
+      </div>
+  </div>
+</div>
+<app-small-footer></app-small-footer>
+
+
+  

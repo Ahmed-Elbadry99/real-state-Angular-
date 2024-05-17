@@ -1,0 +1,178 @@
+<app-navbar></app-navbar>
+<!-- Page Content -->
+<div id="page-content">
+
+    <div class="container my-4">
+        <div class="row">
+            <!-- sidebar -->
+            <div class="col-md-3">
+                <section id="sidebar">
+                    <header>
+                        <h3>Account</h3>
+                    </header>
+                    <aside>
+                        <ul class="sidebar-navigation">
+                            <li class="active"><a routerLink="/profile"><i
+                                        class="fa fa-user"></i><span>Profile</span></a></li>
+                            @if(userData.role !== 'user'){
+                            <li><a routerLink="/my-properties"><i class="fa fa-home"></i><span>My Properties</span></a>
+                            </li>
+                            }
+                        </ul>
+                    </aside>
+                </section><!-- /#sidebar -->
+            </div><!-- /.col-md-3 -->
+            <!-- end Sidebar -->
+            <!-- My Properties -->
+            <div class="col-md-9 col-sm-10">
+                <section id="profile">
+                    <header>
+                        <h1>Profile</h1>
+                    </header>
+                    <div class="account-profile">
+                        <div class="row">
+
+                            <div class="col-md-3">
+                                <img alt="" class="image" src="assets/img/user.png">
+                            </div>
+                            <div class="col-md-9">
+
+                                <section id="contact">
+                                    <dl class="contact-fields">
+                                        <dt><label >Your Name</label></dt>
+                                        <dd>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" 
+                                                    value="{{ userData.name  }}" readonly>
+                                            </div><!-- /.form-group -->
+                                        </dd>
+
+                                        <dt><label >Email</label></dt>
+                                        <dd>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" 
+                                                     value="{{ userData.email }}" readonly>
+                                            </div><!-- /.form-group -->
+                                        </dd>
+                                        <dt><label >Role</label></dt>
+                                        <dd>
+                                            <div class="form-group">
+                                                @if(userData.role === "user"){
+                                                <input type="text" class="form-control" 
+                                                    value="Regular User" readonly>
+                                                }@else if(userData.role === "agent"){
+                                                <input type="text" class="form-control" 
+                                                    value="Agent" readonly>
+                                                }
+                                            </div><!-- /.form-group -->
+                                        </dd>
+
+                                    </dl>
+                                </section>
+
+                                <section >
+                                    <form [formGroup]="updateUserForm" (ngSubmit)="updateUserInfo()">
+                                        <header>
+                                            <h4 class="my-5">Edit your information</h4>
+                                        </header>
+                                        
+                                        <dl class="contact-fields" >
+                                            <dt><label for="form-account-name">Your Name</label></dt>
+                                            <dd>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="form-account-name"
+                                                         formControlName="name" value="{{ userData.name  }}">
+                                                </div>
+                                                @if(updateUserForm.controls["name"].touched && updateUserForm.controls["name"].invalid){
+                                                    @if(updateUserForm.controls["name"].errors?.["required"]){
+                                                        <div class="error text-danger">Name is required.</div>
+                                                    }
+                                                    @if(updateUserForm.controls["name"].errors?.["minlength"]){
+                                                        <div class="error text-danger">Min length for name is 3 characters.</div>
+                                                    }
+                                                }
+                                            </dd>
+    
+                                            <dt><label for="form-account-email">Email</label></dt>
+                                            <dd>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="form-account-email"
+                                                    formControlName="email" value="{{ userData.email  }}">
+                                                </div><!-- /.form-group -->
+                                                @if(updateUserForm.controls["email"].touched && updateUserForm.controls["email"].invalid){
+                                                    @if(updateUserForm.controls["email"].errors?.["required"]){
+                                                        <div class="error text-danger">Email is required.</div>
+                                                    }
+                                                    @if(updateUserForm.controls["email"].errors?.["pattern"]){
+                                                        <div class="error text-danger">Please enter a valid email.</div>
+                                                    }
+                                                }
+                                            </dd>
+                                        </dl>
+                                        <div class="form-group" style="text-align: right;">
+                                            <button type="submit" class="btn btn-default mx-3"
+                                                 routerLink="/profile">Save Changes</button>
+                                            
+                                        </div><!-- /.form-group -->
+                                    </form>
+                                </section>
+
+                                <section >
+                                    <form [formGroup]="changePasswordForm" (ngSubmit)="changePassword()">
+                                        <header>
+                                            <h4 class="my-5">Change your password</h4>
+                                        </header>
+                                        <div *ngIf="successMessage" class="alert alert-success ">
+                                            {{ successMessage }}
+                                          </div>
+                                        <dl class="contact-fields">
+                                            <dt><label for="form-account-password">New Password</label></dt>
+                                            <dd>
+                                                <div class="form-group">
+                                                    <input type="password" class="form-control" id="form-account-password"
+                                                    formControlName="password">
+                                                    @if(changePasswordForm.controls["password"].touched && changePasswordForm.controls["password"].invalid){
+                                                        @if(changePasswordForm.controls["password"].errors?.["required"]){
+                                                            <div class="error text-danger">Password is required.</div>
+                                                        }
+                                                        @if(changePasswordForm.controls["password"].errors?.["minlength"]){
+                                                            <div class="error text-danger">The password must not be less than 8 characters</div>
+                                                        }
+                                                    }
+                                                </div><!-- /.form-group -->
+                                            </dd>
+                                            <dt><label for="form-account-confirmPassword">Confirm New Password</label></dt>
+                                            <dd>
+                                                <div class="form-group">
+                                                    <input type="password" class="form-control" id="form-account-confirmPassword"
+                                                    formControlName="password_confirmation">
+                                                    @if(changePasswordForm.controls["password_confirmation"].touched && changePasswordForm.controls["password_confirmation"].invalid){
+                                                        @if(changePasswordForm.controls["password_confirmation"].errors?.["required"]){
+                                                            <div class="error text-danger">Please confirm the password.</div>
+                                                        }
+                                                        @if(changePasswordForm.controls["password_confirmation"].errors?.["passwordMismatch"]){
+                                                            <div class="error text-danger">Passwords do not match.</div>
+                                                        }
+                                                    }
+                                                </div><!-- /.form-group -->
+                                            </dd>
+                                        </dl>
+                                        <div class="form-group" style="text-align: right;">
+                                            <button type="submit" class="btn btn-default mx-3"
+                                                 [disabled]="changePasswordForm.invalid">Save Changes</button>
+                                            
+                                        </div><!-- /.form-group -->
+                                    </form>
+                                </section>
+
+                            </div><!-- /.col-md-9 -->
+                        </div><!-- /.row -->
+                    </div><!-- /.account-profile -->
+                </section><!-- /#profile -->
+            </div><!-- /.col-md-9 -->
+            <!-- end My Properties -->
+        </div><!-- /.row -->
+    </div><!-- /.container -->
+</div>
+<!-- end Page Content -->
+<app-big-footer></app-big-footer>

@@ -1,0 +1,51 @@
+<app-navbar></app-navbar>
+<h1 class="my-5 container">Incoming Offers</h1>
+<div class="container d-flex justify-content-between">
+
+</div>
+<div class="container " style="min-height: 500px; ">
+    <table class="table  container">
+        <thead class="table-dark">
+          <tr  >
+            <th scope="col">Buyer Name</th>
+            <th scope="col">Buyer Email</th>
+            <th scope="col">Property Title</th>
+            <th scope="col">Property Image</th>
+            <th scope="col">offer price</th>
+            <th scope="col">Buyer message</th>
+            <th scope="col">Status</th>
+            <th scope="col">Property Type</th>
+            <th scope="col">Handle</th>
+          </tr>
+        </thead>
+        <tbody >
+
+          <tr *ngFor="let offer of offers">
+            <td>{{ offer.buyer_name }}</td>
+            <td>{{ offer.buyer_email }}</td>
+            <td>{{ offer.property_title }} </td>
+            <td><img style="width: 80px;" src="http://localhost:8000/images/{{offer.property_image}}" alt="not found"></td>
+            <td>{{ offer.offer_price }}</td>
+            <td> {{ offer.offer_message }}</td>
+            <td class="status"><span class="{{ offer.offer_status }}">{{ offer.offer_status }}</span></td>
+            <td>{{offer.offer_for}}</td>
+            <td>
+              <ng-container *ngIf="offer.offer_status !== 'accepted' && offer.offer_status !== 'rejected'">
+                <div>
+                  <button style="width:fit-content; font-size: 11px;font-weight: bold;" class="btn btn-success mx-1" (click)="acceptOffer(offer.offer_id, offer.offer_for)">Accept</button>
+                  <button style="width:fit-content; font-size: 11px;font-weight: bold;" class="btn btn-danger" (click)="rejectOffer(offer.offer_id, offer.offer_for)">Reject</button>
+                </div>
+                <div class="text-center" [class.d-none]="!isLoading" [class.d-block]="isLoading">
+                  <div class="spinner-border text-warning" style="width: 15px;height: 15px;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              </ng-container>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+
+</div>
+<app-big-footer></app-big-footer>

@@ -1,0 +1,77 @@
+<div class="wrapper">
+    <!-- start navbar -->
+  <app-navbar></app-navbar>
+  <!-- end navber -->
+  <!-- Page Content -->
+  <div id="page-content">
+    <!-- Breadcrumb -->
+    
+    <!-- end Breadcrumb -->
+
+    <div class="container my-5">
+        <div class="row">
+            <!-- Results -->
+            <div class="col-md-9">
+
+                <section id="results">
+                    <header><h1 style="font-weight: lighter;">Properties Listing</h1></header>
+                    <hr>
+                    <section id="search-filter" class="my-5 mx-3">
+                        <figure>
+                            <!-- <span class="search-count">28</span> -->
+                            <div class="sorting ">
+                                <div class="form-group">
+                                    <select class="form-select rounded-0 w-25" name="sorting" #order (click)="sort(order.value)">
+                                        <option value="">Sort By</option>
+                                        <!-- <option value="1">Lowest price first</option>
+                                        <option value="2">Highest price first</option> -->
+                                        <option value="Lowest_area">Lowest area first</option>
+                                        <option  value="Highest_area">Highest area first</option>
+                                    </select>
+                                </div><!-- /.form-group -->
+                            </div>
+                        </figure>
+                    </section>
+                    <div class="container my-5 justify-content-center" id="properties">
+                    <div class="d-flex flex-wrap" >
+
+                    @for (item of getCurrentPageProperties(); track item.id) {
+                      <div class="col-md-12 col-lg-6 col-xl-4 px-2 ">
+                          <app-property-card [property]="item" ></app-property-card>
+                      </div>
+                    }
+
+
+
+                    </div><!-- /.row-->
+
+                    <!-- Pagination -->
+                    <div class="text-center my-2">
+                        <ul class="pagination">
+                            @for (page of getPageNumbers(); track page) {
+                            <li [class.active]="page === currentPage">
+                                <a (click)="changePage(page)">{{ page }}</a>
+                            </li>
+                            }  
+                        </ul><!-- /.pagination-->
+                    </div><!-- /.center-->
+
+                    </div><!-- /#properties-->
+                </section><!-- /#results -->
+            </div><!-- /.col-md-9 -->
+            <!-- end Results -->
+            <div class="col-md-3">
+                <div class="ps-5">
+                    <app-search></app-search>
+                </div>
+            </div>
+            <!-- sidebar -->
+            <!-- <app-search></app-search> -->
+          <!-- end Sidebar -->
+        </div><!-- /.row -->
+    </div><!-- /.container -->
+  </div>
+  <!-- end Page Content -->
+
+  <app-big-footer></app-big-footer>
+</div>
